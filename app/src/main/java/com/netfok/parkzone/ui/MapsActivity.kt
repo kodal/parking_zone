@@ -5,20 +5,18 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolygonOptions
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
 import com.netfok.parkzone.R
 import com.netfok.parkzone.model.Location
 import com.netfok.parkzone.services.LocationService
@@ -31,6 +29,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val viewModel: MapsViewModel by viewModel()
 
     private var locationMarker: Marker? = null
+    private var parkingPolygons = emptyList<Polygon?>()
 
     private var locationService: LocationService? = null
         set(value) {
@@ -99,13 +98,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(locationMarker?.position, 12f))
         viewModel.updateLocationEnabled()
         viewModel.parkingZones.observe(this, Observer {
-            it.forEach { parkingZone ->
+            parkingPolygons = it.map { parkingZone ->
                 map?.addPolygon(PolygonOptions()
                         .clickable(true)
                         .fillColor(ContextCompat.getColor(this, R.color.transparentRed))
                         .strokeColor(ContextCompat.getColor(this, R.color.red))
                         .addAll(parkingZone.points.map { l -> LatLng(l.lat, l.lon) })
-                )?.tag = parkingZone.id
+                )?.apply {
+                    tag = parkingZone.id
+                }
             }
         })
         map?.setOnPolygonClickListener {
@@ -120,9 +121,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun onLocationChanged(location: Location){
-        locationMarker?.isVisible = true
-        locationMarker?.position = LatLng(location.lat, location.lon)
+    private fun onLocationChanged(location: Location?){
+        val latlng = location?.let { LatLng(it.lat, it.lon) }
+        locationMarker?.isVisible = location != null
+        locationMarker?.position = latlng
+        val inPolygon = parkingPolygons.find { PolyUtil.containsLocation(latlng, it?.points, false) }
+        val inParkingZone = (inPolygon?.tag as? Int)?.let { viewModel.getParkingZone(it) }
+        bottom_info.isVisible = inParkingZone != null
+        bottom_name.text = inParkingZone?.name
+        bottom_description.text = inParkingZone?.description
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

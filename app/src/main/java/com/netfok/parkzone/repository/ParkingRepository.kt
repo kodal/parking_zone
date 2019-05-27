@@ -19,6 +19,15 @@ class ParkingRepository {
                     Location(42.829969, 74.615879),
                     Location(42.830598, 74.614978)
                 )
+            ),
+            ParkingZone(
+                2, "Bishkek", "Square", "",
+                listOf(
+                    Location(42.877011, 74.603083),
+                    Location(42.876977, 74.604153),
+                    Location(42.876313, 74.604128),
+                    Location(42.876392, 74.603065)
+                )
             )
         )
     }

@@ -20,7 +20,7 @@ class LocationService : Service() {
     private val waitingBinder by lazy { LocationBinder() }
 
     private val _location = MutableLiveData<com.netfok.parkzone.model.Location>()
-    val location: LiveData<com.netfok.parkzone.model.Location> = _location
+    val location: LiveData<com.netfok.parkzone.model.Location?> = _location
 
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
@@ -65,10 +65,10 @@ class LocationService : Service() {
             stopForeground(true)
             return
         }
-        _location.value = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).run {
+        _location.value = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)?.run {
             com.netfok.parkzone.model.Location(latitude, longitude)
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, locationListener)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0F, locationListener)
 
 
     }
