@@ -1,20 +1,27 @@
 package com.netfok.parkzone.ui
 
 import android.Manifest
-import android.content.DialogInterface
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.IBinder
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolygonOptions
 import com.netfok.parkzone.R
+import com.netfok.parkzone.model.Location
+import com.netfok.parkzone.services.LocationService
 import kotlinx.android.synthetic.main.activity_maps.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -22,6 +29,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var map: GoogleMap? = null
     private val viewModel: MapsViewModel by viewModel()
+
+    private var locationMarker: Marker? = null
+
+    private var locationService: LocationService? = null
+        set(value) {
+            field?.location?.removeObservers(this)
+            value?.location?.observe(this, Observer(this::onLocationChanged))
+            if (value == null && viewModel.locationEnabled.value == true) viewModel.switchLocationEnabled()
+            if (value == null) locationMarker?.isVisible = false
+            field = value
+        }
+    private val locationConnector =object : ServiceConnection{
+        override fun onServiceDisconnected(name: ComponentName?) {
+            locationService = null
+        }
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            locationService = (service as? LocationService.LocationBinder)?.getService()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +68,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         LOCATION_REQUEST
                 )
-            } else {
-                map?.isMyLocationEnabled = it
-                map?.uiSettings?.isMyLocationButtonEnabled = it
             }
 
             val showLocationDrawable = if (it) R.drawable.ic_location_on else R.drawable.ic_location_off
@@ -54,6 +77,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     ContextCompat.getDrawable(this, showLocationDrawable), null, null, null
             )
             show_location.text = getString(showLocationText)
+            if (it && isGranted()){
+                ContextCompat.startForegroundService(this, Intent(this, LocationService::class.java))
+                bindService(Intent(this, LocationService::class.java), locationConnector, Context.BIND_AUTO_CREATE)
+            } else {
+                if (locationService != null) unbindService(locationConnector)
+                locationService = null
+                stopService(Intent(this, LocationService::class.java))
+            }
         })
     }
 
@@ -62,6 +93,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        locationMarker = map?.addMarker(MarkerOptions().title("Location").position(LatLng(42.877071, 74.603556)))?.apply {
+            this.isVisible = false
+        }
+        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(locationMarker?.position, 12f))
         viewModel.updateLocationEnabled()
         viewModel.parkingZones.observe(this, Observer {
             it.forEach { parkingZone ->
@@ -83,6 +118,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                     .show()
         }
+    }
+
+    private fun onLocationChanged(location: Location){
+        locationMarker?.isVisible = true
+        locationMarker?.position = LatLng(location.lat, location.lon)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
