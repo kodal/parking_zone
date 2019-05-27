@@ -32,6 +32,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.history.HistoryActivity"/>
+        <activity android:name=".ui.list.ParkingZonesActivity"/>
+
         <service android:name=".services.LocationService"/>
         <service android:name=".services.WaitingService"/>
     </application>

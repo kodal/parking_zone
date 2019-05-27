@@ -1,6 +1,7 @@
 package com.netfok.parkzone.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -23,6 +24,7 @@ import com.netfok.parkzone.R
 import com.netfok.parkzone.model.Location
 import com.netfok.parkzone.services.LocationService
 import com.netfok.parkzone.ui.history.HistoryActivity
+import com.netfok.parkzone.ui.list.ParkingZonesActivity
 import kotlinx.android.synthetic.main.activity_maps.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -98,6 +100,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.menu_history -> startActivity(Intent(this, HistoryActivity::class.java))
+            R.id.menu_parking_zones -> startActivityForResult(Intent(this, ParkingZonesActivity::class.java), LIST_REQUEST)
         }
         return true
     }
@@ -155,7 +158,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         ) viewModel.switchLocationEnabled()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LIST_REQUEST && resultCode == Activity.RESULT_OK){
+            val selectedParkingZoneId = data?.getIntExtra(ParkingZonesActivity.PARKING_ZONE_ID, 0) ?: return
+            val builder = LatLngBounds.builder()
+            viewModel.getParkingZone(selectedParkingZoneId)?.points?.forEach {
+                builder.include(LatLng(it.lat, it.lon))
+            }
+            val latLngBounds = builder.build()
+            map?.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0))
+        }
+    }
+
     companion object {
         const val LOCATION_REQUEST = 101
+        const val LIST_REQUEST = 23
     }
 }

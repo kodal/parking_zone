@@ -5,6 +5,7 @@ import com.netfok.parkzone.database.AppDatabase
 import com.netfok.parkzone.repository.ParkingRepository
 import com.netfok.parkzone.ui.MapsViewModel
 import com.netfok.parkzone.ui.history.HistoryViewModel
+import com.netfok.parkzone.ui.list.ParkingZonesViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -19,6 +20,7 @@ val appModule = module {
     single { ParkingRepository(get()) }
 
 
+    viewModel { ParkingZonesViewModel(get()) }
     viewModel { HistoryViewModel(get()) }
     viewModel { MapsViewModel(get()) }
 }

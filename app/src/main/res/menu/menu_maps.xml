@@ -2,4 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_history"
           android:title="@string/history"/>
+    <item android:id="@+id/menu_parking_zones"
+          android:title="@string/parking_zones"/>
 </menu>

@@ -3,4 +3,5 @@
     <string name="location_off">Местоположение выключен</string>
     <string name="location_on">Местоположение включен</string>
     <string name="history">History</string>
+    <string name="parking_zones">Parking Zones</string>
 </resources>
