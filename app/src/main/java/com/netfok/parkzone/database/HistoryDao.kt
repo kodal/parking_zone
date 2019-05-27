@@ -17,4 +17,7 @@ interface HistoryDao {
 
     @Query("SELECT * FROM History")
     fun getAll(): LiveData<List<History>>
+
+    @Query("DELETE FROM History WHERE id=:historyId")
+    fun delete(historyId: Int)
 }

@@ -34,4 +34,6 @@ class ParkingRepository(
     fun getHistories(): LiveData<List<History>> {
         return appDatabase.historyDao().getAll()
     }
+
+    fun delete(historyId: Int) = appDatabase.historyDao().delete(historyId)
 }

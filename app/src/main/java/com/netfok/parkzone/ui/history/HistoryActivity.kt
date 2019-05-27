@@ -7,9 +7,9 @@ import com.netfok.parkzone.R
 import kotlinx.android.synthetic.main.activity_history.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HistoryActivity: AppCompatActivity() {
+class HistoryActivity : AppCompatActivity() {
     private val viewModel: HistoryViewModel by viewModel()
-    private val historyAdapter  = HistoryAdapter()
+    private val historyAdapter by lazy { HistoryAdapter(viewModel::delete) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

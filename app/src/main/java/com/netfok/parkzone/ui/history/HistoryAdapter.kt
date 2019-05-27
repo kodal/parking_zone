@@ -12,7 +12,9 @@ import com.netfok.parkzone.extensions.toHoursWithMinutes
 import com.netfok.parkzone.model.History
 import kotlinx.android.synthetic.main.item_history.view.*
 
-class HistoryAdapter : ListAdapter<History, HistoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+class HistoryAdapter(
+    val onDelete: (Int) -> Unit = {}
+) : ListAdapter<History, HistoryAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_history, parent, false)
@@ -24,6 +26,9 @@ class HistoryAdapter : ListAdapter<History, HistoryAdapter.ViewHolder>(DIFF_CALL
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.remove.setOnClickListener { onDelete(getItem(adapterPosition).id) }
+        }
         fun bind(history: History?) = itemView.apply {
             item_history_name.text = history?.parkingZone?.name
             item_history_description.text = history?.time?.toHoursWithMinutes()

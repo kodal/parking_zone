@@ -14,15 +14,18 @@
             android:divider="@drawable/divider_16dp"
             android:padding="16dp"
             >
+
         <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/item_history_image"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 app:placeholderImage="@android:color/darker_gray"
                 />
+
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:showDividers="middle"
                 android:divider="@drawable/divider_16dp"
@@ -42,5 +45,13 @@
                     android:layout_height="wrap_content"
                     />
         </LinearLayout>
+
+        <ImageView
+                android:id="@+id/remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_remove_circle"
+                />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
