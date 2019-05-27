@@ -1,14 +1,14 @@
 package com.netfok.parkzone.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ParkingZone(
+data class History(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String = "",
-    val description: String = "",
-    val image: String = "",
-    val points: List<Location> = emptyList()
+    @Embedded(prefix = "parkingZone_")
+    val parkingZone: ParkingZone,
+    val time: Long
 )

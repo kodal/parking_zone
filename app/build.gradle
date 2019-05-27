@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -29,6 +30,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation "com.google.maps.android:android-maps-utils:0.5"
     implementation 'org.koin:koin-android-viewmodel:2.0.0'
+
+    def room_version = "2.1.0-beta01"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.facebook.fresco:fresco:1.13.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'

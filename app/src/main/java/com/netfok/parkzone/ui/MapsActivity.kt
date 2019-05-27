@@ -5,6 +5,8 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,6 +22,7 @@ import com.google.maps.android.PolyUtil
 import com.netfok.parkzone.R
 import com.netfok.parkzone.model.Location
 import com.netfok.parkzone.services.LocationService
+import com.netfok.parkzone.ui.history.HistoryActivity
 import kotlinx.android.synthetic.main.activity_maps.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -87,6 +90,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater?.inflate(R.menu.menu_maps, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.menu_history -> startActivity(Intent(this, HistoryActivity::class.java))
+        }
+        return true
+    }
+
     private fun isGranted() = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
             PackageManager.PERMISSION_GRANTED
 
@@ -130,6 +145,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         bottom_info.isVisible = inParkingZone != null
         bottom_name.text = inParkingZone?.name
         bottom_description.text = inParkingZone?.description
+        bottom_image.setImageURI(inParkingZone?.image)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

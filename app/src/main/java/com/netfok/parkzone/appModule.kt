@@ -1,12 +1,24 @@
 package com.netfok.parkzone
 
+import androidx.room.Room
+import com.netfok.parkzone.database.AppDatabase
 import com.netfok.parkzone.repository.ParkingRepository
 import com.netfok.parkzone.ui.MapsViewModel
+import com.netfok.parkzone.ui.history.HistoryViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    single { ParkingRepository() }
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "app.db")
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+    single { ParkingRepository(get()) }
 
+
+    viewModel { HistoryViewModel(get()) }
     viewModel { MapsViewModel(get()) }
 }

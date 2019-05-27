@@ -45,14 +45,15 @@ class WaitingService : Service() {
                 val startTime = startTime ?: return@let
                 val currentTime = System.currentTimeMillis()
                 val parkingTime = currentTime - startTime
-                val historyId = parkingRepository.saveHistory(it, parkingTime)
+                if (parkingTime < 1000 * 60 * 3) return@let
+                parkingRepository.saveHistory(it, parkingTime)
                 val notification =
                     buildNotification("Was parking ${it.name}", "Time: ${getHourWithMinutes(parkingTime)}")
-                notificationManager.notify(historyId, notification)
-                this.startTime = null
+                notificationManager.notify(1212443, notification)
             }
             if (value == null) {
                 val notification = buildNotification("Not in parking", "")
+                startTime = null
                 notificationManager.notify(NOTIFICATION_ID, notification)
             } else {
                 startTime = System.currentTimeMillis()

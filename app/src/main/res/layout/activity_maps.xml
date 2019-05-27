@@ -4,7 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
->
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
     <fragment
 
             android:layout_width="match_parent"
@@ -30,17 +31,23 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:visibility="gone"
+            android:showDividers="middle"
+            android:divider="@drawable/divider_16dp"
             tools:visibility="visible"
             android:padding="16dp"
     >
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/bottom_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                app:placeholderImage="@android:color/darker_gray"
+                />
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:showDividers="middle"
+                android:divider="@drawable/divider_16dp"
                 android:orientation="vertical">
             <TextView
                     android:id="@+id/bottom_name"

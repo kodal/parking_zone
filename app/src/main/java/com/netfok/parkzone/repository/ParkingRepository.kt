@@ -2,25 +2,19 @@ package com.netfok.parkzone.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.netfok.parkzone.database.AppDatabase
+import com.netfok.parkzone.model.History
 import com.netfok.parkzone.model.Location
 import com.netfok.parkzone.model.ParkingZone
 
-class ParkingRepository {
+class ParkingRepository(
+    private val appDatabase: AppDatabase
+) {
     val parkingZones = listOf(
         ParkingZone(
-            1,
-            "name",
-            "description",
-            "",
-            listOf(
-                Location(42.831551, 74.616212),
-                Location(42.830944, 74.617049),
-                Location(42.829969, 74.615879),
-                Location(42.830598, 74.614978)
-            )
-        ),
-        ParkingZone(
-            2, "Bishkek", "Square", "",
+            2, "Bishkek", "Square",
+            "https://upload.wikimedia.org/wikipedia/commons/7/7e/" +
+                    "Ala-too_Square_in_Bishkek%2C_Kyrgyzstan%2C_2007-09-11_%28color-corrected%29.jpg",
             listOf(
                 Location(42.877011, 74.603083),
                 Location(42.876977, 74.604153),
@@ -33,7 +27,11 @@ class ParkingRepository {
         value = parkingZones
     }
 
-     fun saveHistory(parkingZone: ParkingZone, parkingTime: Long): Int{
-        return 1
+    fun saveHistory(parkingZone: ParkingZone, parkingTime: Long) {
+        appDatabase.historyDao().insert(History(parkingZone = parkingZone, time = parkingTime))
+    }
+
+    fun getHistories(): LiveData<List<History>> {
+        return appDatabase.historyDao().getAll()
     }
 }
