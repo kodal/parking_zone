@@ -1,8 +1,11 @@
 package com.netfok.parkzone
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -10,6 +13,8 @@ import androidx.lifecycle.Observer
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.PolygonOptions
 import kotlinx.android.synthetic.main.activity_maps.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -58,6 +63,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         viewModel.updateLocationEnabled()
+        viewModel.parkingZones.observe(this, Observer {
+            it.forEach { parkingZone ->
+                map?.addPolygon(PolygonOptions()
+                        .clickable(true)
+                        .fillColor(ContextCompat.getColor(this, R.color.transparentRed))
+                        .strokeColor(ContextCompat.getColor(this, R.color.red))
+                        .addAll(parkingZone.points.map { l -> LatLng(l.lat, l.lon) })
+                )?.tag = parkingZone.id
+            }
+        })
+        map?.setOnPolygonClickListener {
+            val parkingZone = viewModel.getParkingZone(it.tag as? Int ?: return@setOnPolygonClickListener)
+            AlertDialog.Builder(this)
+                    .setTitle(parkingZone?.name)
+                    .setMessage(parkingZone?.description)
+                    .setPositiveButton(android.R.string.ok) { dialog: DialogInterface?, _: Int ->
+                        dialog?.dismiss()
+                    }
+                    .show()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
