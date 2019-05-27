@@ -1,8 +1,9 @@
-package com.netfok.parkzone
+package com.netfok.parkzone.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.netfok.parkzone.repository.ParkingRepository
 import com.netfok.parkzone.model.ParkingZone
 
 class MapsViewModel(

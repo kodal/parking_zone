@@ -1,4 +1,4 @@
-package com.netfok.parkzone
+package com.netfok.parkzone.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
