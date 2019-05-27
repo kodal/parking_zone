@@ -11,7 +11,7 @@ class MapsViewModel(
 ): ViewModel() {
     private val _locationEnabled = MutableLiveData<Boolean>().apply { value = false }
     val locationEnabled: LiveData<Boolean> = _locationEnabled
-    val parkingZones = parkingRepository.parkingZones
+    val parkingZones = parkingRepository.parkingZonesLive
 
     fun switchLocationEnabled(){
         _locationEnabled.value = _locationEnabled.value?.not()

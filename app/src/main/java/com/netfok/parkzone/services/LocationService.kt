@@ -1,8 +1,10 @@
 package com.netfok.parkzone.services
 
 import android.app.*
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -10,6 +12,7 @@ import android.location.LocationManager
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,14 +20,30 @@ import com.netfok.parkzone.R
 import com.netfok.parkzone.ui.MapsActivity
 
 class LocationService : Service() {
-    private val waitingBinder by lazy { LocationBinder() }
+    private val locationBinder by lazy { LocationBinder() }
 
     private val _location = MutableLiveData<com.netfok.parkzone.model.Location>()
     val location: LiveData<com.netfok.parkzone.model.Location?> = _location
 
+    private var waitingService: WaitingService? = null
+    private val waitingIntent by lazy { Intent(applicationContext, WaitingService::class.java) }
+
+    private val waitingConnector = object : ServiceConnection{
+        override fun onServiceDisconnected(name: ComponentName?) {
+            waitingService = null
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            waitingService = (service as? WaitingService.WaitingBinder)?.getService()
+        }
+
+    }
+
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
-            _location.value = location?.let { com.netfok.parkzone.model.Location(it.latitude, it.longitude) }
+            val myLocation = location?.let { com.netfok.parkzone.model.Location(it.latitude, it.longitude) }
+            _location.value = myLocation
+            waitingService?.onLocationChanged(myLocation)
         }
 
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
@@ -32,7 +51,7 @@ class LocationService : Service() {
         override fun onProviderDisabled(provider: String?) {}
     }
 
-    override fun onBind(intent: Intent?) = waitingBinder
+    override fun onBind(intent: Intent?) = locationBinder
 
     override fun onCreate() {
         super.onCreate()
@@ -70,12 +89,14 @@ class LocationService : Service() {
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0F, locationListener)
 
-
+        ContextCompat.startForegroundService(this, waitingIntent)
+        bindService(waitingIntent, waitingConnector, Context.BIND_AUTO_CREATE)
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
+        stopService(waitingIntent)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             stopForeground(true)
         }

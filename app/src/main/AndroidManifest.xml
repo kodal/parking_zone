@@ -32,6 +32,7 @@
             </intent-filter>
         </activity>
         <service android:name=".services.LocationService"/>
+        <service android:name=".services.WaitingService"/>
     </application>
 
 </manifest>
