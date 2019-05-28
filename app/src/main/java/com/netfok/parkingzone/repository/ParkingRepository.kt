@@ -12,7 +12,7 @@ class ParkingRepository(
 ) {
     val parkingZones = listOf(
         ParkingZone(
-            2, "Bishkek", "Square",
+            1, "Bishkek", "Square",
             "https://upload.wikimedia.org/wikipedia/commons/7/7e/" +
                     "Ala-too_Square_in_Bishkek%2C_Kyrgyzstan%2C_2007-09-11_%28color-corrected%29.jpg",
             listOf(
