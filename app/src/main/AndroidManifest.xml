@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.netfok.parkingzone.ui.history.HistoryActivity"/>
-        <activity android:name="com.netfok.parkingzone.ui.list.ParkingZonesActivity"/>
+        <activity android:name="com.netfok.parkingzone.ui.list.ParkingZonesFragment"/>
 
         <service android:name="com.netfok.parkingzone.services.LocationService"/>
         <service android:name="com.netfok.parkingzone.services.WaitingService"/>

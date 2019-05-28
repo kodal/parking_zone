@@ -6,7 +6,6 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.PolyUtil
 import com.netfok.parkingzone.model.Location
 import com.netfok.parkingzone.model.ParkingZone
 import com.netfok.parkingzone.repository.ParkingRepository
@@ -20,8 +19,13 @@ class MapsViewModel(
     private val _location = MutableLiveData<Location?>()
     private val _zonesByNearest = MutableLiveData<List<ParkingZone>>()
     val zonesByNearest: LiveData<List<ParkingZone>> = _zonesByNearest
-    val zonesAvailable = Transformations.map(zonesByNearest){
+    val zonesAvailable = Transformations.map(zonesByNearest) {
         it.filter { it.isAvailable }
+    }
+
+    private val _sortNearest = MutableLiveData<Boolean>().apply { value = true }
+    val listParkingZones = Transformations.switchMap(_sortNearest){
+        if (it) zonesByNearest else parkingZones
     }
 
     init {
@@ -66,5 +70,9 @@ class MapsViewModel(
             androidLocation.distanceTo(centerLocation)
         }
         _zonesByNearest.value = zonesByNearest
+    }
+
+    fun sortNearest(sort: Boolean = false){
+        _sortNearest.value = sort
     }
 }

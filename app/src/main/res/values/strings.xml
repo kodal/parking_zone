@@ -5,4 +5,5 @@
     <string name="history">История</string>
     <string name="parking_zones">Паркинг зоны</string>
     <string name="available_parking_zones">Свободные паркинг зоны</string>
+    <string name="sort_by_nearest">Сортировка по удалению от текущего местоположения.</string>
 </resources>
