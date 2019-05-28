@@ -1,4 +1,4 @@
-package com.netfok.parkzone.ui
+package com.netfok.parkzone.ui.maps
 
 import android.Manifest
 import android.app.Activity
@@ -54,6 +54,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         val mapFragment = supportFragmentManager
@@ -70,7 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 ActivityCompat.requestPermissions(
                         this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        LOCATION_REQUEST
+                    LOCATION_REQUEST
                 )
             }
 
@@ -100,7 +101,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.menu_history -> startActivity(Intent(this, HistoryActivity::class.java))
-            R.id.menu_parking_zones -> startActivityForResult(Intent(this, ParkingZonesActivity::class.java), LIST_REQUEST)
+            R.id.menu_parking_zones -> startActivityForResult(Intent(this, ParkingZonesActivity::class.java),
+                LIST_REQUEST
+            )
         }
         return true
     }

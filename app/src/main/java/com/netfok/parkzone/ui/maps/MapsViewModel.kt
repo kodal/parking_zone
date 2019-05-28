@@ -1,4 +1,4 @@
-package com.netfok.parkzone.ui
+package com.netfok.parkzone.ui.maps
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

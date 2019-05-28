@@ -12,7 +12,7 @@ import com.netfok.parkzone.R
 import com.netfok.parkzone.model.Location
 import com.netfok.parkzone.model.ParkingZone
 import com.netfok.parkzone.repository.ParkingRepository
-import com.netfok.parkzone.ui.MapsActivity
+import com.netfok.parkzone.ui.maps.MapsActivity
 import org.koin.android.ext.android.inject
 import java.util.*
 

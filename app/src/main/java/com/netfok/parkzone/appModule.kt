@@ -3,7 +3,7 @@ package com.netfok.parkzone
 import androidx.room.Room
 import com.netfok.parkzone.database.AppDatabase
 import com.netfok.parkzone.repository.ParkingRepository
-import com.netfok.parkzone.ui.MapsViewModel
+import com.netfok.parkzone.ui.maps.MapsViewModel
 import com.netfok.parkzone.ui.history.HistoryViewModel
 import com.netfok.parkzone.ui.list.ParkingZonesViewModel
 import org.koin.android.ext.koin.androidContext

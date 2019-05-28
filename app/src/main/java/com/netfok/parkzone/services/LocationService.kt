@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.netfok.parkzone.R
-import com.netfok.parkzone.ui.MapsActivity
+import com.netfok.parkzone.ui.maps.MapsActivity
 
 class LocationService : Service() {
     private val locationBinder by lazy { LocationBinder() }
