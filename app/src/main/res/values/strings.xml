@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">ParkZone</string>
+    <string name="app_name">ParkingZone</string>
     <string name="location_off">Местоположение выключен</string>
     <string name="location_on">Местоположение включен</string>
     <string name="history">History</string>
     <string name="parking_zones">Parking Zones</string>
+    <string name="available_parking_zones">Свободные паркинг зоны</string>
 </resources>

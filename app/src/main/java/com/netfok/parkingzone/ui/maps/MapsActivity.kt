@@ -23,6 +23,7 @@ import com.google.maps.android.PolyUtil
 import com.netfok.parkingzone.R
 import com.netfok.parkingzone.model.Location
 import com.netfok.parkingzone.services.LocationService
+import com.netfok.parkingzone.ui.available.AvailableFragment
 import com.netfok.parkingzone.ui.history.HistoryActivity
 import com.netfok.parkingzone.ui.list.ParkingZonesActivity
 import kotlinx.android.synthetic.main.activity_maps.*
@@ -104,6 +105,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             R.id.menu_parking_zones -> startActivityForResult(Intent(this, ParkingZonesActivity::class.java),
                 LIST_REQUEST
             )
+            R.id.menu_available -> AvailableFragment().show(supportFragmentManager, "available")
         }
         return true
     }
@@ -152,6 +154,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         bottom_name.text = inParkingZone?.name
         bottom_description.text = inParkingZone?.description
         bottom_image.setImageURI(inParkingZone?.image)
+        viewModel.change(location)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

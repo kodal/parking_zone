@@ -4,4 +4,6 @@
           android:title="@string/history"/>
     <item android:id="@+id/menu_parking_zones"
           android:title="@string/parking_zones"/>
+    <item android:id="@+id/menu_available"
+          android:title="@string/available_parking_zones"/>
 </menu>

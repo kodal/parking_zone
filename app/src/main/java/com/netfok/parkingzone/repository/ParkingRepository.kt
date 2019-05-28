@@ -20,6 +20,19 @@ class ParkingRepository(
                 Location(42.876977, 74.604153),
                 Location(42.876313, 74.604128),
                 Location(42.876392, 74.603065)
+            ),
+            false
+        ),
+        ParkingZone(
+            2, "Bishkek Park", "Market",
+            "https://media-cdn.tripadvisor.com/media/photo-s/09/03/52/16/caption.jpg",
+            listOf(
+                Location(42.874481, 74.590190),
+                Location(42.874822, 74.590248),
+                Location(42.874820, 74.590511),
+                Location(42.874553, 74.590473),
+                Location(42.874560, 74.590396),
+                Location(42.874479, 74.590394)
             )
         )
     )

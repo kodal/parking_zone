@@ -10,5 +10,6 @@ data class ParkingZone(
     val name: String = "",
     val description: String = "",
     val image: String = "",
-    val points: List<Location> = emptyList()
+    val points: List<Location> = emptyList(),
+    val isAvailable: Boolean = true
 )
